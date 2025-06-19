@@ -9,14 +9,25 @@ parameters:
     type: string
     default: '<not_set>'
 
+variables:
+  # Add your secret GitHub token in pipeline variables as GITHUB_TOKEN (keep it secret)
+  GITHUB_TOKEN: $(GITHUB_TOKEN)  
+
 steps:
-  # Try to use UsePythonVersion for hosted agents
+  # Set AGENT_TOOL_GITHUB_AUTH env var so tool installer can authenticate to GitHub
+  - script: echo "Setting GitHub token for tool downloads"
+    env:
+      AGENT_TOOL_GITHUB_AUTH: $(GITHUB_TOKEN)
+    displayName: 'Set GitHub Auth Token'
+
   - task: UsePythonVersion@0
     inputs:
       versionSpec: ${{ parameters.PYTHON_VERSION }}
       addToPath: true
     displayName: Use Python ${{ parameters.PYTHON_VERSION }}
     continueOnError: true  # Prevent failure if Python isn't in the cache
+    env:
+      AGENT_TOOL_GITHUB_AUTH: $(GITHUB_TOKEN)
 
   - script: |
       python --version
