@@ -9,15 +9,10 @@ parameters:
     type: string
     default: '<not_set>'
 
-variables:
-  # Add your secret GitHub token in pipeline variables as GITHUB_TOKEN (keep it secret)
-  GITHUB_TOKEN: $(GITHUB_TOKEN)  
-
 steps:
-  # Set AGENT_TOOL_GITHUB_AUTH env var so tool installer can authenticate to GitHub
   - script: echo "Setting GitHub token for tool downloads"
     env:
-      AGENT_TOOL_GITHUB_AUTH: $(GITHUB_TOKEN)
+      AGENT_TOOL_GITHUB_AUTH: $(GITHUB_TOKEN)  # Use variable passed from main pipeline
     displayName: 'Set GitHub Auth Token'
 
   - task: UsePythonVersion@0
@@ -25,7 +20,7 @@ steps:
       versionSpec: ${{ parameters.PYTHON_VERSION }}
       addToPath: true
     displayName: Use Python ${{ parameters.PYTHON_VERSION }}
-    continueOnError: true  # Prevent failure if Python isn't in the cache
+    continueOnError: true
     env:
       AGENT_TOOL_GITHUB_AUTH: $(GITHUB_TOKEN)
 
@@ -34,21 +29,31 @@ steps:
       python -m pip install --upgrade pip
       pip install ruff
     displayName: Install Ruff
+    env:
+      AGENT_TOOL_GITHUB_AUTH: $(GITHUB_TOKEN)
 
   - ${{ if eq(parameters.RUFF_ARGS, '<not_set>') }}:
     - script: |
         ruff format --check ${{ parameters.SOURCE_FOLDER }}
       displayName: Ruff Format Check
+      env:
+        AGENT_TOOL_GITHUB_AUTH: $(GITHUB_TOKEN)
 
     - script: |
         ruff check ${{ parameters.SOURCE_FOLDER }} --output-format=github
       displayName: Ruff Lint Check
+      env:
+        AGENT_TOOL_GITHUB_AUTH: $(GITHUB_TOKEN)
 
   - ${{ if ne(parameters.RUFF_ARGS, '<not_set>') }}:
     - script: |
         ruff format --check ${{ parameters.SOURCE_FOLDER }}
       displayName: Ruff Format Check with custom args
+      env:
+        AGENT_TOOL_GITHUB_AUTH: $(GITHUB_TOKEN)
 
     - script: |
         ruff check ${{ parameters.RUFF_ARGS }} ${{ parameters.SOURCE_FOLDER }} --output-format=github
       displayName: Ruff Lint Check with custom args
+      env:
+        AGENT_TOOL_GITHUB_AUTH: $(GITHUB_TOKEN)
