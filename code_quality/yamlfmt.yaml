@@ -1,0 +1,18 @@
+parameters:
+  - name: SOURCE_FOLDER
+    type: string
+    default: '.'
+steps:
+  - script: |
+      sudo apt-get update
+      sudo apt-get install -y golang-go
+    displayName: Install Golang
+  - script: |
+      export PATH=$PATH:$(go env GOPATH)/bin
+      go install github.com/google/yamlfmt/cmd/yamlfmt@latest
+    displayName: Install yamlfmt
+  - script: |
+      export PATH=$PATH:$(go env GOPATH)/bin
+      echo "Running yamlfmt on folder: ${{ parameters.SOURCE_FOLDER }}"
+      yamlfmt -lint ${{ parameters.SOURCE_FOLDER }}
+    displayName: Run yamlfmt
