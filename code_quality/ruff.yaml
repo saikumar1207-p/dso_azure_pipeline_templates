@@ -11,12 +11,12 @@ parameters:
 
 steps:
   # Try to use UsePythonVersion for hosted agents
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: ${{ parameters.PYTHON_VERSION }}
-      addToPath: true
-    displayName: Use Python ${{ parameters.PYTHON_VERSION }}
-    continueOnError: true  # ✅ Prevent failure if Python isn't in the cache
+ # - task: UsePythonVersion@0
+  #  inputs:
+   #   versionSpec: ${{ parameters.PYTHON_VERSION }}
+   #   addToPath: true
+   # displayName: Use Python ${{ parameters.PYTHON_VERSION }}
+   # continueOnError: true  # ✅ Prevent failure if Python isn't in the cache
 
   - script: |
       python --version
