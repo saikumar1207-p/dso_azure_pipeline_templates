@@ -4,21 +4,18 @@ parameters:
     default: '.'
 
 steps:
-  - powershell: |
-      # Confirm Go version is available
-      go version
+- powershell: |
+    choco install golang -y
+  displayName: 'Install Go (Golang)'
 
-      # Install yamlfmt using go install
-      go install github.com/google/yamlfmt/cmd/yamlfmt@latest
+- powershell: |
+    go version
+    go install github.com/google/yamlfmt/cmd/yamlfmt@latest
+    $env:PATH += ";$env:USERPROFILE\go\bin"
+    yamlfmt --version
+  displayName: 'Install yamlfmt'
 
-      # Add Go bin folder to PATH for this session
-      $env:PATH += ";$env:USERPROFILE\go\bin"
+- powershell: |
+    yamlfmt -lint ${{ parameters.SOURCE_FOLDER }}
+  displayName: 'Run yamlfmt'
 
-      # Verify yamlfmt installation
-      yamlfmt --version
-    displayName: 'Install yamlfmt'
-
-  - powershell: |
-      # Run yamlfmt lint on the source folder
-      yamlfmt -lint ${{ parameters.SOURCE_FOLDER }}
-    displayName: 'Run yamlfmt'
