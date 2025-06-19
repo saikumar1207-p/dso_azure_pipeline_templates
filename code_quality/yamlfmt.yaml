@@ -5,20 +5,20 @@ parameters:
 
 steps:
   - powershell: |
-      # Install Go if needed
-      choco install golang -y
+      # Manually add Go installed by Chocolatey to PATH (user-level path)
+      $goPath = "C:\ProgramData\chocolatey\lib\golang\tools\go\bin"
+      $env:PATH += ";$goPath"
 
-      # Set GOPATH manually in case it's not already set
-      $env:GOPATH = "$env:USERPROFILE\go"
-      $env:PATH += ";$env:GOPATH\bin"
-
-      # Confirm Go is available
+      # Confirm Go is now accessible
       go version
 
       # Install yamlfmt
       go install github.com/google/yamlfmt/cmd/yamlfmt@latest
 
-      # Use yamlfmt immediately
+      # Ensure go/bin is also in PATH
+      $env:PATH += ";$env:USERPROFILE\go\bin"
+
+      # Run yamlfmt
       yamlfmt --version
       yamlfmt -lint ${{ parameters.SOURCE_FOLDER }}
     displayName: 'Install and Run yamlfmt'
