@@ -3,10 +3,6 @@ parameters:
     type: string
     default: '.'
 
-pool:
-  vmImage: 'windows-latest'
-  name: 'default'
-
 steps:
   - powershell: |
       # Confirm Go version is available
