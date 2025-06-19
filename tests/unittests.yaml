@@ -1,6 +1,5 @@
 parameters:
   testDirectory: 'tests'
-
 steps:
   - script: |
       echo "Running unit tests from directory: ${{ parameters.testDirectory }}"
