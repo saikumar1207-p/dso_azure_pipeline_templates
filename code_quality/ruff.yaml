@@ -10,13 +10,13 @@ parameters:
     default: '<not_set>'
 
 steps:
-   Try to use UsePythonVersion for hosted agents
+  # Try to use UsePythonVersion for hosted agents
   - task: UsePythonVersion@0
     inputs:
       versionSpec: ${{ parameters.PYTHON_VERSION }}
       addToPath: true
     displayName: Use Python ${{ parameters.PYTHON_VERSION }}
-    continueOnError: true  # ✅ Prevent failure if Python isn't in the cache
+    continueOnError: true  # Prevent failure if Python isn't in the cache
 
   - script: |
       python --version
@@ -25,17 +25,19 @@ steps:
     displayName: Install Ruff
 
   - ${{ if eq(parameters.RUFF_ARGS, '<not_set>') }}:
-      - script: |
-          ruff format --check ${{ parameters.SOURCE_FOLDER }}
-        displayName: Ruff Format Check
-      - script: |
-          ruff check ${{ parameters.SOURCE_FOLDER }} --output-format=github
-        displayName: Ruff Lint Check
+    - script: |
+        ruff format --check ${{ parameters.SOURCE_FOLDER }}
+      displayName: Ruff Format Check
+
+    - script: |
+        ruff check ${{ parameters.SOURCE_FOLDER }} --output-format=github
+      displayName: Ruff Lint Check
 
   - ${{ if ne(parameters.RUFF_ARGS, '<not_set>') }}:
-      - script: |
-          ruff format --check ${{ parameters.SOURCE_FOLDER }}
-        displayName: Ruff Format Check with custom args
-      - script: |
-          ruff check ${{ parameters.RUFF_ARGS }} ${{ parameters.SOURCE_FOLDER }} --output-format=github
-        displayName: Ruff Lint Check with custom args
+    - script: |
+        ruff format --check ${{ parameters.SOURCE_FOLDER }}
+      displayName: Ruff Format Check with custom args
+
+    - script: |
+        ruff check ${{ parameters.RUFF_ARGS }} ${{ parameters.SOURCE_FOLDER }} --output-format=github
+      displayName: Ruff Lint Check with custom args
