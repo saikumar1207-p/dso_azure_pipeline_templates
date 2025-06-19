@@ -13,7 +13,7 @@ steps:
       go version
 
       # Install yamlfmt
-      go install github.com/google/yamlfmt/cmd/yamlfmt@latest
+     # go install github.com/google/yamlfmt/cmd/yamlfmt@latest
 
       # Add Go bin folder to PATH for this session
       $env:PATH += ";$env:USERPROFILE\go\bin"
