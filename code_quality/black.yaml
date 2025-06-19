@@ -1,0 +1,27 @@
+parameters:
+  - name: SOURCE_FOLDER
+    type: string
+    default: '.'
+  - name: PYTHON_VERSION
+    type: string
+    default: '3.10'
+  - name: BLACK_ARGS
+    type: string
+    default: '<not_set>'
+steps:
+  - task: UsePythonVersion@0
+    displayName: Use Python ${{ parameters.PYTHON_VERSION }}
+    inputs:
+      versionSpec: ${{ parameters.PYTHON_VERSION }}
+      addToPath: false
+    name: pyTools
+  - ${{ if eq(parameters.BLACK_ARGS, '<not_set>') }}:
+      - bash: |
+          pip install black
+          black --diff --check --line-length 88 ${{ parameters.SOURCE_FOLDER }}
+        displayName: Run black
+  - ${{ if ne(parameters.BLACK_ARGS, '<not_set>') }}:
+      - bash: |
+          pip install black
+          black ${{ parameters.BLACK_ARGS}} ${{ parameters.SOURCE_FOLDER }}
+        displayName: Run black with args
