@@ -11,19 +11,11 @@ parameters:
 
 steps:
   - script: echo "Setting GitHub token for tool downloads"
-    env:
-      AGENT_TOOL_GITHUB_AUTH: $(GITHUB_TOKEN)  # Use variable passed from main pipeline
-    displayName: 'Set GitHub Auth Token'
-
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: ${{ parameters.PYTHON_VERSION }}
-      addToPath: true
-    displayName: Use Python ${{ parameters.PYTHON_VERSION }}
-    continueOnError: true
-    env:
-      AGENT_TOOL_GITHUB_AUTH: $(GITHUB_TOKEN)
-
+  #- task: UsePythonVersion@0
+    #inputs:
+      #versionSpec: ${{ parameters.PYTHON_VERSION }}
+      #addToPath: true
+    #displayName: Use Python ${{ parameters.PYTHON_VERSION }}
   - script: |
       python --version
       python -m pip install --upgrade pip
