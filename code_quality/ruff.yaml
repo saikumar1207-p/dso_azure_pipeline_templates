@@ -4,20 +4,20 @@ parameters:
     default: '.'
   - name: PYTHON_VERSION
     type: string
-    default: '3.10'
+    default: '3.10'  # Optional: Can keep for documentation but not used now
   - name: RUFF_ARGS
     type: string
     default: '<not_set>'
+
 steps:
-  - task: UsePythonVersion@0
-    inputs:
-      versionSpec: ${{ parameters.PYTHON_VERSION }}
-      addToPath: true
-    displayName: Use Python ${{ parameters.PYTHON_VERSION }}
+  # Skip UsePythonVersion since you're using manually installed Python
+
   - script: |
+      python --version
       python -m pip install --upgrade pip
       pip install ruff
     displayName: Install Ruff
+
   - ${{ if eq(parameters.RUFF_ARGS, '<not_set>') }}:
       - script: |
           ruff format --check ${{ parameters.SOURCE_FOLDER }}
@@ -25,6 +25,7 @@ steps:
       - script: |
           ruff check ${{ parameters.SOURCE_FOLDER }} --output-format=github
         displayName: Ruff Lint Check
+
   - ${{ if ne(parameters.RUFF_ARGS, '<not_set>') }}:
       - script: |
           ruff format --check ${{ parameters.SOURCE_FOLDER }}
