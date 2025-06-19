@@ -4,8 +4,9 @@ parameters:
     default: '.'
 steps:
   - script: |
-      sudo apt-get update
-      sudo apt-get install -y golang-go
+      # sudo apt-get update
+     # sudo apt-get install -y golang-go
+     choco install golang -y # powershell windows
     displayName: Install Golang
   - script: |
       export PATH=$PATH:$(go env GOPATH)/bin
