@@ -2,15 +2,19 @@ parameters:
   - name: SEARCH_PATH
     type: string
     default: '.'
+
 steps:
-  - script: |
-      echo "Searching for .yml files in ${{ parameters.SEARCH_PATH }}"
-      yml_files=$(find ${{ parameters.SEARCH_PATH }} -type f -name "*.yml")
-      if [ -n "$yml_files" ]; then
-        echo "Error: .yml files found in the repository:"
-        echo "$yml_files"
-        exit 1
-      else
-        echo "No .yml files found."
-      fi
-    displayName: "yml files checking"
+  - task: Bash@3
+    displayName: "YML files checking"
+    inputs:
+      targetType: 'inline'
+      script: |
+        echo "Searching for .yml files in ${{ parameters.SEARCH_PATH }}"
+        yml_files=$(find ${{ parameters.SEARCH_PATH }} -type f -name "*.yml")
+        if [ -n "$yml_files" ]; then
+          echo "Error: .yml files found in the repository:"
+          echo "$yml_files"
+          exit 1
+        else
+          echo "No .yml files found."
+        fi
