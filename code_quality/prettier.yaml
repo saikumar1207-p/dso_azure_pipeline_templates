@@ -21,7 +21,7 @@ steps:
          # echo "run prettier"
         #displayName: Run Prettier
  # - ${{ if ne(parameters.PRETTIER_ARGS, '<not_set>') }}:
-      - script: |
+     # - script: |
           # prettier --tab-width 4 ${{ parameters.PRETTIER_ARGS }} "${{ parameters.FILE_PATTERN }}"
-          echo "prittier checked"
-        displayName: Run Prettier with custom args
+         # echo "prittier checked"
+       # displayName: Run Prettier with custom args
