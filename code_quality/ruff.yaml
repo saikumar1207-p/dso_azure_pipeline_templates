@@ -1,1 +1,34 @@
-
+parameters:
+  - name: SOURCE_FOLDER
+    type: string
+    default: '.'
+  - name: PYTHON_VERSION
+    type: string
+    default: '3.10'
+  - name: RUFF_ARGS
+    type: string
+    default: '<not_set>'
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: ${{ parameters.PYTHON_VERSION }}
+      addToPath: true
+    displayName: Use Python ${{ parameters.PYTHON_VERSION }}
+  - script: |
+      python -m pip install --upgrade pip
+      pip install ruff
+    displayName: Install Ruff
+  - ${{ if eq(parameters.RUFF_ARGS, '<not_set>') }}:
+      - script: |
+          ruff format --check ${{ parameters.SOURCE_FOLDER }}
+        displayName: Ruff Format Check
+      - script: |
+          ruff check ${{ parameters.SOURCE_FOLDER }} --output-format=github
+        displayName: Ruff Lint Check
+  - ${{ if ne(parameters.RUFF_ARGS, '<not_set>') }}:
+      - script: |
+          ruff format --check ${{ parameters.SOURCE_FOLDER }}
+        displayName: Ruff Format Check with custom args
+      - script: |
+          ruff check ${{ parameters.RUFF_ARGS }} ${{ parameters.SOURCE_FOLDER }} --output-format=github
+        displayName: Ruff Lint Check with custom args
