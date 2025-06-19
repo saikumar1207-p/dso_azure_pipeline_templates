@@ -15,7 +15,7 @@ steps:
   - script: |
       npm install --global prettier
       displayName: Install Prettier
-  - ${{ if eq(parameters.PRETTIER_ARGS, '<not_set>') }}:
+  #- ${{ if eq(parameters.PRETTIER_ARGS, '<not_set>') }}:
      # - script: |
           # prettier --tab-width 4 --check "${{ parameters.FILE_PATTERN }}"
          # echo "run prettier"
