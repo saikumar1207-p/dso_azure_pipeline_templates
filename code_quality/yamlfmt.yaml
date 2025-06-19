@@ -3,24 +3,25 @@ parameters:
     type: string
     default: '.'
 
+pool:
+  vmImage: 'windows-latest'
+
 steps:
   - powershell: |
-      choco install golang -y
-    displayName: Install Golang using Chocolatey
+      # Confirm Go version is available
+      go version
 
-  - powershell: |
-      # Set GOPATH env variable for this session
-      $env:GOPATH = "$env:USERPROFILE\go"
-      # Add GOPATH\bin to PATH env variable for this session
-      $env:PATH += ";$env:GOPATH\bin"
-      
+      # Install yamlfmt using go install
       go install github.com/google/yamlfmt/cmd/yamlfmt@latest
-    displayName: Install yamlfmt
+
+      # Add Go bin folder to PATH for this session
+      $env:PATH += ";$env:USERPROFILE\go\bin"
+
+      # Verify yamlfmt installation
+      yamlfmt --version
+    displayName: 'Install yamlfmt'
 
   - powershell: |
-      # Add GOPATH\bin to PATH again before running yamlfmt
-      $env:PATH += ";$env:GOPATH\bin"
-      
-      Write-Host "Running yamlfmt on folder: ${{ parameters.SOURCE_FOLDER }}"
+      # Run yamlfmt lint on the source folder
       yamlfmt -lint ${{ parameters.SOURCE_FOLDER }}
-    displayName: Run yamlfmt
+    displayName: 'Run yamlfmt'
