@@ -4,17 +4,18 @@ parameters:
     default: '.'
 
 steps:
-  - task: Bash@3
+  - task: PowerShell@2
     displayName: "YML files checking"
     inputs:
       targetType: 'inline'
       script: |
-        echo "Searching for .yml files in ${{ parameters.SEARCH_PATH }}"
-        yml_files=$(find ${{ parameters.SEARCH_PATH }} -type f -name "*.yml")
-        if [ -n "$yml_files" ]; then
-          echo "Error: .yml files found in the repository:"
-          echo "$yml_files"
+        Write-Host "Searching for .yml files in '${{ parameters.SEARCH_PATH }}'"
+        $files = Get-ChildItem -Path '${{ parameters.SEARCH_PATH }}' -Recurse -Include *.yml
+        if ($files) {
+          Write-Error "Error: .yml files found in the repository:"
+          $files | ForEach-Object { Write-Error $_.FullName }
           exit 1
-        else
-          echo "No .yml files found."
-        fi
+        }
+        else {
+          Write-Host "No .yml files found."
+        }
