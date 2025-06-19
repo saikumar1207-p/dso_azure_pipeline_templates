@@ -5,6 +5,7 @@ parameters:
 
 pool:
   vmImage: 'windows-latest'
+  name: 'default'
 
 steps:
   - powershell: |
