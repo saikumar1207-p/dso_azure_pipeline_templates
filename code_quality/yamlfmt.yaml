@@ -9,13 +9,16 @@ steps:
     displayName: 'Install Go (Golang)'
 
   - powershell: |
-      # Refresh environment variable for Go bin folder so yamlfmt is accessible
-      $env:PATH += ";$env:USERPROFILE\go\bin"
+      # Add Go installation bin folder to PATH
+      $env:PATH += ";C:\Program Files\Go\bin;$env:USERPROFILE\go\bin"
+
+      # Verify Go is available
+      go version
 
       # Install yamlfmt
       go install github.com/google/yamlfmt/cmd/yamlfmt@latest
 
-      # Check yamlfmt version
+      # Verify yamlfmt installed correctly
       yamlfmt --version
     displayName: 'Install yamlfmt'
 
@@ -23,3 +26,4 @@ steps:
       # Run yamlfmt lint on the source folder
       yamlfmt -lint ${{ parameters.SOURCE_FOLDER }}
     displayName: 'Run yamlfmt'
+
