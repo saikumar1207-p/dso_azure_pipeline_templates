@@ -4,13 +4,19 @@ parameters:
     default: '.'
   - name: PYTHON_VERSION
     type: string
-    default: '3.10'  # Optional: Can keep for documentation but not used now
+    default: '3.12'
   - name: RUFF_ARGS
     type: string
     default: '<not_set>'
 
 steps:
-  # Skip UsePythonVersion since you're using manually installed Python
+  # Try to use UsePythonVersion for hosted agents
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: ${{ parameters.PYTHON_VERSION }}
+      addToPath: true
+    displayName: Use Python ${{ parameters.PYTHON_VERSION }}
+    continueOnError: true  # ✅ Prevent failure if Python isn't in the cache
 
   - script: |
       python --version
