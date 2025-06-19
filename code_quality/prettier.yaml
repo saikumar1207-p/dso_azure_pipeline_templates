@@ -18,8 +18,8 @@ steps:
   - ${{ if eq(parameters.PRETTIER_ARGS, '<not_set>') }}:
      # - script: |
           # prettier --tab-width 4 --check "${{ parameters.FILE_PATTERN }}"
-          echo "run prettier"
-        displayName: Run Prettier
+         # echo "run prettier"
+        #displayName: Run Prettier
  # - ${{ if ne(parameters.PRETTIER_ARGS, '<not_set>') }}:
       - script: |
           # prettier --tab-width 4 ${{ parameters.PRETTIER_ARGS }} "${{ parameters.FILE_PATTERN }}"
