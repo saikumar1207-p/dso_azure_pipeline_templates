@@ -2,7 +2,5 @@ parameters:
   testDirectory: 'tests'
 steps:
   - script: |
-      echo "Running unit tests from directory: ${{ parameters.testDirectory }}"
-      # You can replace this with: pytest ${{ parameters.testDirectory }}
-    displayName: Run Unit Tests
+      echo "Running unit tests from directorys
     
