@@ -4,14 +4,6 @@ parameters:
     default: '.'
 
 steps:
-
-# Step 1: Try to restore Go from cache
-- task: Cache@2
-  inputs:
-    key: 'go | "$(Agent.OS)" | 1.21.5'
-    path: /usr/local/go
-  displayName: Cache Go Installation
-
 # Step 2: Install Go manually only if cache was not restored
 - script: |
     echo "Cache miss - Downloading and installing Go..."
