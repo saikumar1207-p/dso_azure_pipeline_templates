@@ -10,10 +10,10 @@ parameters:
     default: '<not_set>'
 steps:
   #- task: UsePythonVersion@0
-    inputs:
-      versionSpec: ${{ parameters.PYTHON_VERSION }}
-      addToPath: true
-    displayName: Use Python ${{ parameters.PYTHON_VERSION }}
+    #inputs:
+      #versionSpec: ${{ parameters.PYTHON_VERSION }}
+      #addToPath: true
+    #displayName: Use Python ${{ parameters.PYTHON_VERSION }}
   - script: |
       python -m pip install --upgrade pip
       pip install ruff
