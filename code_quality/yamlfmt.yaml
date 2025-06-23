@@ -8,5 +8,11 @@ steps:
       sudo apt-get install -y golang-go
     displayName: Install Golang
   - script: |
-     echo "Install yamlfmt"
+      export PATH=$PATH:$(go env GOPATH)/bin
+      go install github.com/google/yamlfmt/cmd/yamlfmt@latest
     displayName: Install yamlfmt
+  - script: |
+      export PATH=$PATH:$(go env GOPATH)/bin
+      echo "Running yamlfmt on folder: ${{ parameters.SOURCE_FOLDER }}"
+      yamlfmt -lint ${{ parameters.SOURCE_FOLDER }}
+    displayName: Run yamlfmt
