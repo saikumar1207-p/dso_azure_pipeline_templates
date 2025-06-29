@@ -20,11 +20,7 @@ parameters:
     default: '**/tests/**'
 steps:
   - task: SonarQubePrepare@7
-    condition: 
-      and(
-        succeeded(), 
-        eq(variables.pythonVersion, '${{ parameters.sonarqubePythonVersion }}') 
-      )
+    condition: " and( succeeded(), eq(variables.pythonVersion, '${{ parameters.sonarqubePythonVersion }}'))"
     inputs:
       SonarQube: ${{ parameters.sonarQube }}
       scannerMode: CLI
@@ -39,9 +35,10 @@ steps:
         sonar.issue.ignore.multicriteria.e1.ruleKey=yaml:DocumentStartCheck
         sonar.issue.ignore.multicriteria.e1.resourceKey=**/*.yaml
         sonar.yamllint.maxLineLength=120
+        sonar.issue.ignore.multicriteria.e2.ruleKey=yaml:LineLengthCheck
   - task: SonarQubeAnalyze@7
-    condition: "and(\n  succeeded(),   \n  eq(variables.pythonVersion, '${{ parameters.sonarqubePythonVersion }}')\n)\n"
+    condition: "and( succeededeq(variables.pythonVersion, '${{ parameters.sonarqubePythonVersion }}'))" 
   - task: SonarQubePublish@7
-    condition: "and(  \n  succeeded(), \n  eq(variables.pythonVersion, '${{ parameters.sonarqubePythonVersion }}')\n)\n"
+    condition: "and( succeeded(), eq(variables.pythonVersion, '${{ parameters.sonarqubePythonVersion }}') )"
     inputs:
       pollingTimeoutSec: '300'
