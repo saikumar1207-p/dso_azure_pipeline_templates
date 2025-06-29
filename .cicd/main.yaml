@@ -1,0 +1,44 @@
+trigger:
+  branches:
+    include:
+      - main
+      - feature/*
+      - fix/*
+pr:
+  drafts: false
+  branches:
+    include:
+      - main
+pool:
+  vmImage: ubuntu-latest
+variables:
+  DEFAULT_PYTHON: '3.12'
+stages:
+  - stage: CodeQuality
+    displayName: Code Quality Checks
+    jobs:
+      - job: Yamllint
+        displayName: YAML Lint
+        steps:
+          - template: ../code_quality/yamlfmt.yaml
+            parameters:
+              SOURCE_FOLDER: "."
+      - job: YmlORYaml
+        displayName: Disallow .yml Files
+        steps:
+          - template: ../code_quality/yml_check.yaml
+  - stage: SonarQube
+    displayName: SonarQube Analysis
+    dependsOn: CodeQuality
+    jobs:
+      - job: SonarQube
+        displayName: SonarQube Analysis
+        variables:
+          pythonVersion: ${{ variables.DEFAULT_PYTHON }}
+        steps:
+          - template: ../code_quality/sonarqube.yaml
+            parameters:
+              sonarQube: SonarQubeServer
+              cliProjectKey: gsk-tech_dso_azure_pipeline_templates_06f112dc-5fdf-4920-b473-a9e50af82204
+              sonarqubePythonVersion: ${{ variables.DEFAULT_PYTHON }}
+              sonarSources: "."
