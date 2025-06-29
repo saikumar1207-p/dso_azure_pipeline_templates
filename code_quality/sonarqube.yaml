@@ -1,0 +1,47 @@
+parameters:
+  - name: sonarQube
+    type: string
+  - name: cliProjectKey
+    type: string
+  - name: sonarqubePythonVersion
+    type: string
+    default: '3.10'
+  - name: coverageType
+    type: string
+    default: 'xml'
+  - name: projectBaseDir
+    type: string
+    default: ""
+  - name: sonarSources
+    type: string
+    default: ""
+  - name: sonarExclusions
+    type: string
+    default: '**/tests/**'
+steps:
+  - task: SonarQubePrepare@7
+    condition: 
+      and(
+        succeeded(), 
+        eq(variables.pythonVersion, '${{ parameters.sonarqubePythonVersion }}') 
+      )
+    inputs:
+      SonarQube: ${{ parameters.sonarQube }}
+      scannerMode: CLI
+      configMode: manual
+      cliProjectKey: ${{ parameters.cliProjectKey }}
+      extraProperties: |
+        sonar.python.coverage.reportPaths=coverage.${{parameters.coverageType}}
+        sonar.exclusions=${{parameters.sonarExclusions}}
+        sonar.projectBaseDir=${{parameters.projectBaseDir}}
+        sonar.sources=${{parameters.sonarSources}}
+        sonar.issue.ignore.multicriteria=e1
+        sonar.issue.ignore.multicriteria.e1.ruleKey=yaml:DocumentStartCheck
+        sonar.issue.ignore.multicriteria.e1.resourceKey=**/*.yaml
+        sonar.yamllint.maxLineLength=120
+  - task: SonarQubeAnalyze@7
+    condition: "and(\n  succeeded(),   \n  eq(variables.pythonVersion, '${{ parameters.sonarqubePythonVersion }}')\n)\n"
+  - task: SonarQubePublish@7
+    condition: "and(  \n  succeeded(), \n  eq(variables.pythonVersion, '${{ parameters.sonarqubePythonVersion }}')\n)\n"
+    inputs:
+      pollingTimeoutSec: '300'
